@@ -1,23 +1,25 @@
-import os
+import discord
 import openai
 
+from openai_discord_bot.config import OPENAI_API_KEY
 from openai_discord_bot.enums import Roles
-from dotenv import load_dotenv
 
-load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = OPENAI_API_KEY
 
 
-def get_chat_completion(messages, model_id: str = "gpt-3.5-turbo"):
-    response = openai.ChatCompletion.create(messages=messages, model=model_id)
+async def get_chat_completion(messages, model_id: str = "gpt-3.5-turbo"):
+    """Get chat completion from openai api"""
+    response = openai.ChatCompletion.acreate(messages=messages, model=model_id)
     return response["choices"][0]["message"]["content"]
 
 
 def create_message(role: Roles, content: str):
+    """Create message from roles and message content"""
     return {"role": role.value, "content": content}
 
 
-async def parse_history(history, bot_user) -> list[dict[str, str]]:
+async def parse_history(history, bot_user: discord.User) -> list[dict[str, str]]:
+    """Parse thread history into openAI message"""
     all_messages = []
     async for message in history:
         if not message.content:

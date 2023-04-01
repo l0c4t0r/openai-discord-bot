@@ -1,14 +1,9 @@
 """OpenAI Relayer Bot"""
-import os
-
 import discord
 from discord.ext import commands
-from dotenv import load_dotenv
 
 from openai_discord_bot.chat import get_chat_completion, parse_history
-
-load_dotenv()
-TOKEN = os.getenv("DISCORD_TOKEN")
+from openai_discord_bot.config import DISCORD_TOKEN
 
 COMMAND_PREFIX = "!"
 
@@ -25,6 +20,7 @@ async def on_ready():
 
 @bot.listen("on_message")
 async def on_message(message: discord.Message):
+    """Listen to messages and relay to chatGPT"""
     # Don't process if it's a bot message, or if it is a command
     if (message.author == bot.user) or message.content.startswith(COMMAND_PREFIX):
         return
@@ -33,12 +29,14 @@ async def on_message(message: discord.Message):
         messages = await parse_history(
             history=message.channel.history(), bot_user=bot.user
         )
-        chat_response = get_chat_completion(messages)
+        chat_response = await get_chat_completion(messages)
         await message.channel.send(chat_response)
 
 
 @bot.command(name="new")
 async def new_thread(ctx: commands.Context, thread_name: str):
+    """Create new thread with provided name"""
+    # Don't allow creating subthreads
     if hasattr(ctx.channel, "parent"):
         return
     await ctx.message.create_thread(name=thread_name)
@@ -47,6 +45,7 @@ async def new_thread(ctx: commands.Context, thread_name: str):
 
 @bot.command(name="system")
 async def system_message(ctx: commands.Context, message: str):
+    """Send system messages"""
     await ctx.message.delete()
     if not hasattr(ctx.channel, "parent"):
         return
@@ -54,8 +53,8 @@ async def system_message(ctx: commands.Context, message: str):
     messages = await parse_history(history=ctx.history(), bot_user=bot.user)
 
     print(messages)
-    chat_response = get_chat_completion(messages)
+    chat_response = await get_chat_completion(messages)
     await ctx.send(chat_response)
 
 
-bot.run(TOKEN)
+bot.run(DISCORD_TOKEN)
