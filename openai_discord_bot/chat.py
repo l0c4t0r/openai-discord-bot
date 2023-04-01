@@ -9,7 +9,7 @@ openai.api_key = OPENAI_API_KEY
 
 async def get_chat_completion(messages, model_id: str = "gpt-3.5-turbo"):
     """Get chat completion from openai api"""
-    response = openai.ChatCompletion.acreate(messages=messages, model=model_id)
+    response = await openai.ChatCompletion.acreate(messages=messages, model=model_id)
     return response["choices"][0]["message"]["content"]
 
 
