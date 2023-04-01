@@ -1,10 +1,10 @@
 import os
 import openai
 
-from discord.ext import commands
-
 from openai_discord_bot.enums import Roles
+from dotenv import load_dotenv
 
+load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 

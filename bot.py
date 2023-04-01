@@ -34,7 +34,7 @@ async def on_message(message: discord.Message):
             history=message.channel.history(), bot_user=bot.user
         )
         chat_response = get_chat_completion(messages)
-        await ctx.send(chat_response)
+        await message.channel.send(chat_response)
 
 
 @bot.command(name="new")
@@ -42,6 +42,7 @@ async def new_thread(ctx: commands.Context, thread_name: str):
     if hasattr(ctx.channel, "parent"):
         return
     await ctx.message.create_thread(name=thread_name)
+    await ctx.message.delete()
 
 
 @bot.command(name="system")
