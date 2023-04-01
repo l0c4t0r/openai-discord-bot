@@ -1,3 +1,5 @@
+"""OpenAI Chat Completion Related"""
+
 import discord
 import openai
 

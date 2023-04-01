@@ -15,6 +15,7 @@ bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents)
 
 @bot.event
 async def on_ready():
+    """When bot connects to discord"""
     print(f"{bot.user.name} has connected to Discord")
 
 
