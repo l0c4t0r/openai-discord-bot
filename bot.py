@@ -49,7 +49,6 @@ async def new_thread(ctx: commands.Context, thread_name: str):
     if hasattr(ctx.channel, "parent") or ctx.channel.name == "random":
         return
     await ctx.message.create_thread(name=thread_name)
-    await ctx.message.delete()
 
 
 @bot.command(name="system")
