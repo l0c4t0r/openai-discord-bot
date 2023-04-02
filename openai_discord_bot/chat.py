@@ -24,7 +24,7 @@ async def parse_history(history, bot_user: discord.User) -> list[dict[str, str]]
     """Parse thread history into openAI message"""
     all_messages = []
     async for message in history:
-        if not message.content:
+        if not message.content or message.content.startswith("!"):
             continue
         if message.author == bot_user:
             if message.content.startswith("[SYSTEM]"):
